@@ -37,8 +37,6 @@ async function run(): Promise<void> {
       core.setFailed('Error authenticating the Cloud SDK.');
     }
 
-    console.log(process.cwd());
-
     const child = spawn(
       'cloud-sql-proxy/lib/cloud_sql_proxy',
       [`-instances=${instanceConnectionName}=tcp:${port}`],
