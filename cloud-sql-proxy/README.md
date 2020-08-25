@@ -45,7 +45,7 @@ steps:
   - uses: actions/checkout@v2
   - uses: ./setup-gcloud
     with:
-      service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY_B64 }}
+      service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY_JSON }}
       export_default_credentials: true
   - id: cloud-sql-proxy
     name: setup Cloud SQL proxy
