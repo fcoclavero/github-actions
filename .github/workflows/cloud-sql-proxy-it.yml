@@ -15,7 +15,7 @@ jobs:
       - uses: ./setup-gcloud
         with:
           export_default_credentials: true
-          credentials: ${{ secrets.SERVICE_ACCOUNT_KEY_B64 }}
+          service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY_B64 }}
       - id: cloud-sql-proxy
         name: setup Cloud SQL proxy
         uses: ./cloud-sql-proxy
