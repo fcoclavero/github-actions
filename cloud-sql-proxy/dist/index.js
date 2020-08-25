@@ -140,8 +140,10 @@ function run() {
             if (!authenticated) {
                 core.setFailed('Error authenticating the Cloud SDK.');
             }
+            console.log(process.cwd());
             const child = child_process_1.spawn('../lib/cloud_sql_proxy', [`-instances=${instanceConnectionName}=tcp:${port}`], {
                 detached: true,
+                stdio: 'inherit',
             });
             child.unref();
         }
