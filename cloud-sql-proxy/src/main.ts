@@ -19,18 +19,12 @@ async function run(): Promise<void> {
       await setupGcloud.installGcloudSDK(gcloudVersion);
     }
 
-    // If not already authenticated, try to authenticate with provided credentials.
-    let authenticated = await setupGcloud.isAuthenticated();
-    if (!authenticated) {
-      // Authenticate gcloud SDK.
-      if (credentials) {
-        await setupGcloud.authenticateGcloudSDK(credentials);
-      } else {
-        core.setFailed('Not authenticated and no credentials provided.');
-      }
+    // Authenticate gcloud SDK.
+    if (credentials) {
+      await setupGcloud.authenticateGcloudSDK(credentials);
     }
 
-    authenticated = await setupGcloud.isAuthenticated();
+    const authenticated = await setupGcloud.isAuthenticated();
     if (!authenticated) {
       core.setFailed('Error authenticating the Cloud SDK.');
     }

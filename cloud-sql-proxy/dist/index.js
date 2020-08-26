@@ -123,18 +123,11 @@ function run() {
                 const gcloudVersion = yield setupGcloud.getLatestGcloudSDKVersion();
                 yield setupGcloud.installGcloudSDK(gcloudVersion);
             }
-            // If not already authenticated, try to authenticate with provided credentials.
-            let authenticated = yield setupGcloud.isAuthenticated();
-            if (!authenticated) {
-                // Authenticate gcloud SDK.
-                if (credentials) {
-                    yield setupGcloud.authenticateGcloudSDK(credentials);
-                }
-                else {
-                    core.setFailed('Not authenticated and no credentials provided.');
-                }
+            // Authenticate gcloud SDK.
+            if (credentials) {
+                yield setupGcloud.authenticateGcloudSDK(credentials);
             }
-            authenticated = yield setupGcloud.isAuthenticated();
+            const authenticated = yield setupGcloud.isAuthenticated();
             if (!authenticated) {
                 core.setFailed('Error authenticating the Cloud SDK.');
             }
