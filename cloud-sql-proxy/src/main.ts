@@ -30,7 +30,7 @@ async function run(): Promise<void> {
     }
 
     const child = spawn(
-      'cloud-sql-proxy/lib/cloud_sql_proxy',
+      'lib/cloud_sql_proxy',
       [`-instances=${instanceConnectionName}=tcp:${port}`],
       {
         detached: true,
