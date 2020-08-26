@@ -25,7 +25,7 @@ jobs:
         run: psql "host=127.0.0.1 port=${{ secrets.CLOUD_SQL_PROXY_PORT }} sslmode=disable dbname=${{ secrets.DB_NAME }} user=${{ secrets.DB_USER_NAME }} password=${{ secrets.DB_PASSWORD }}"
 
   b64_json:
-    name: Authenticate with JSON credentials.
+    name: Authenticate with Base64 JSON credentials.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
