@@ -20,7 +20,7 @@ This action gets an [OpenID Connect](https://developers.google.com/identity/prot
 
 ### `port`
 
-**Optional.** The IP where the port will be exposed in the localhost. Defaults to PostgreSQL's `5432`.
+**Optional.** The IP where the port will be exposed in the localhost. Defaults to PostgreSQL's `${{ secrets.CLOUD_SQL_PROXY_PORT }}`.
 
 ## Example usage
 
@@ -33,9 +33,9 @@ steps:
     name: setup Cloud SQL proxy
     uses: ./cloud-sql-proxy
     with:
-      credentials: ${{ secrets.SERVICE_ACCOUNT_KEY_JSON }}
-      instance_connection_name: project_name:instance_region:instance_name
-      port: 5432
+      credentials: ${{ secrets.SERVICE_ACCOUNT_KEY_B64 }}
+      instance_connection_name: ${{ secrets.INSTANCE_CONNECTION_NAME }}
+      port: ${{ secrets.CLOUD_SQL_PROXY_PORT }}
 ```
 
 Using the [`setup-gcloud`](../setup-gcloud/README.md) action with `export_default_credentials`:
@@ -51,6 +51,6 @@ steps:
     name: setup Cloud SQL proxy
     uses: ./cloud-sql-proxy
     with:
-      instance_connection_name: project_name:instance_region:instance_name
-      port: 5432
+      instance_connection_name: ${{ secrets.INSTANCE_CONNECTION_NAME }}
+      port: ${{ secrets.CLOUD_SQL_PROXY_PORT }}
 ```
