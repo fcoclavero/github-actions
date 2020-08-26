@@ -24,6 +24,20 @@ jobs:
       - name: test connection
         run: psql "host=127.0.0.1 port=${{ secrets.CLOUD_SQL_PROXY_PORT }} sslmode=disable dbname=${{ secrets.DB_NAME }} user=${{ secrets.DB_USER_NAME }} password=${{ secrets.DB_PASSWORD }}"
 
+  b64_json:
+    name: Authenticate with JSON credentials.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: setup Cloud SQL proxy
+        uses: ./cloud-sql-proxy
+        with:
+          credentials: ${{ secrets.SERVICE_ACCOUNT_KEY_B64 }}
+          instance_connection_name: ${{ secrets.INSTANCE_CONNECTION_NAME }}
+          port: ${{ secrets.CLOUD_SQL_PROXY_PORT }}
+      - name: test connection
+        run: psql "host=127.0.0.1 port=${{ secrets.CLOUD_SQL_PROXY_PORT }} sslmode=disable dbname=${{ secrets.DB_NAME }} user=${{ secrets.DB_USER_NAME }} password=${{ secrets.DB_PASSWORD }}"
+
   json:
     name: Authenticate with JSON credentials.
     runs-on: ubuntu-latest
