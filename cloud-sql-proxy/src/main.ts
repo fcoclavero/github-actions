@@ -32,7 +32,7 @@ async function run(): Promise<void> {
     console.log(process.cwd());
 
     const child = spawn(
-      './lib/cloud_sql_proxy',
+      './cloud_sql_proxy',
       [`-instances=${instanceConnectionName}=tcp:${port}`],
       {
         detached: true,
