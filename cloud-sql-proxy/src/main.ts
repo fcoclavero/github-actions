@@ -1,7 +1,6 @@
 import * as core from '@actions/core';
 import { spawn } from 'child_process';
 import * as setupGcloud from '../../setupGcloudSDK/dist/index';
-import { getCredentials } from './credentials';
 
 /**
  * Executes the main action. It includes the main business logic and is the
@@ -12,8 +11,7 @@ async function run(): Promise<void> {
     // Retrieve input.
     const instanceConnectionName = core.getInput('instance_connection_name');
     const port = core.getInput('port');
-    const credentials = getCredentials();
-    const privateKey = credentials.private_key;
+    const credentials = core.getInput('credentials');
 
     // Install gcloud if not already installed.
     if (!setupGcloud.isInstalled()) {
@@ -25,8 +23,8 @@ async function run(): Promise<void> {
     let authenticated = await setupGcloud.isAuthenticated();
     if (!authenticated) {
       // Authenticate gcloud SDK.
-      if (privateKey) {
-        await setupGcloud.authenticateGcloudSDK(privateKey);
+      if (credentials) {
+        await setupGcloud.authenticateGcloudSDK(credentials);
       } else {
         core.setFailed('Not authenticated and no credentials provided.');
       }

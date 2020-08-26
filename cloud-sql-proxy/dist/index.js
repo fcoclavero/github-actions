@@ -107,7 +107,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const child_process_1 = __webpack_require__(129);
 const setupGcloud = __importStar(__webpack_require__(702));
-const credentials_1 = __webpack_require__(660);
 /**
  * Executes the main action. It includes the main business logic and is the
  * primary entry point. It is documented inline.
@@ -118,8 +117,7 @@ function run() {
             // Retrieve input.
             const instanceConnectionName = core.getInput('instance_connection_name');
             const port = core.getInput('port');
-            const credentials = credentials_1.getCredentials();
-            const privateKey = credentials.private_key;
+            const credentials = core.getInput('credentials');
             // Install gcloud if not already installed.
             if (!setupGcloud.isInstalled()) {
                 const gcloudVersion = yield setupGcloud.getLatestGcloudSDKVersion();
@@ -129,8 +127,8 @@ function run() {
             let authenticated = yield setupGcloud.isAuthenticated();
             if (!authenticated) {
                 // Authenticate gcloud SDK.
-                if (privateKey) {
-                    yield setupGcloud.authenticateGcloudSDK(privateKey);
+                if (credentials) {
+                    yield setupGcloud.authenticateGcloudSDK(credentials);
                 }
                 else {
                     core.setFailed('Not authenticated and no credentials provided.');
@@ -537,67 +535,6 @@ module.exports = require("path");
 /***/ (function(module) {
 
 module.exports = require("net");
-
-/***/ }),
-
-/***/ 660:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseCredentials = exports.getCredentials = void 0;
-const core = __importStar(__webpack_require__(470));
-const fs = __importStar(__webpack_require__(747));
-/** Get service account credentials.
- *
- * Tries to load from action input (as defined in `../action.yml`), and if unavailable
- * tries to load from the `GOOGLE_APPLICATION_CREDENTIALS` environment variable, which is
- * the default name used by the `../../setup-gcloud` action to store service account keys
- * when the `export_default_credentials` option is used.
- *
- * @return {ServiceAccountCredentials} The parsed credentials object.
- */
-function getCredentials() {
-    return parseCredentials(core.getInput('credentials') ||
-        fs.readFileSync(String(process.env.GOOGLE_APPLICATION_CREDENTIALS), 'utf8'));
-}
-exports.getCredentials = getCredentials;
-/** Parse the given credentials into an object.
- *
- * If the credentials are not JSON, they are probably Base64 encoded.
- *
- * @param {object} credentials - the credentials string. Either JSON string or a
- *   Base64 encoded JSON string.
- * @return {ServiceAccountCredentials} The parsed credentials object.
- */
-function parseCredentials(credentials) {
-    if (!credentials.trim().startsWith('{')) {
-        credentials = Buffer.from(credentials, 'base64').toString('utf8');
-    }
-    return JSON.parse(credentials);
-}
-exports.parseCredentials = parseCredentials;
-
 
 /***/ }),
 
