@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import { spawn } from 'child_process';
 import * as setupGcloud from '../../setupGcloudSDK/dist/index';
+import { resolve } from 'path';
 
 /**
  * Executes the main action. It includes the main business logic and is the
@@ -30,11 +31,11 @@ async function run(): Promise<void> {
     }
 
     const child = spawn(
-      'cloud-sql-proxy/lib/cloud_sql_proxy',
+      './cloud_sql_proxy',
       [`-instances=${instanceConnectionName}=tcp:${port}`],
       {
+        cwd: resolve(__dirname, '../lib'),
         detached: true,
-        stdio: 'inherit',
       },
     );
     child.unref();

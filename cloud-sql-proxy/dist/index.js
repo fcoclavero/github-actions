@@ -107,6 +107,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const child_process_1 = __webpack_require__(129);
 const setupGcloud = __importStar(__webpack_require__(702));
+const path_1 = __webpack_require__(622);
 /**
  * Executes the main action. It includes the main business logic and is the
  * primary entry point. It is documented inline.
@@ -131,9 +132,9 @@ function run() {
             if (!authenticated) {
                 core.setFailed('Error authenticating the Cloud SDK.');
             }
-            const child = child_process_1.spawn('cloud-sql-proxy/lib/cloud_sql_proxy', [`-instances=${instanceConnectionName}=tcp:${port}`], {
+            const child = child_process_1.spawn('./cloud_sql_proxy', [`-instances=${instanceConnectionName}=tcp:${port}`], {
+                cwd: __webpack_require__.ab + "lib",
                 detached: true,
-                stdio: 'inherit',
             });
             child.unref();
         }
