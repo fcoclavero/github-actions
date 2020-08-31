@@ -24,7 +24,3 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         run: psql "host=127.0.0.1 port=5432 sslmode=disable dbname=${{ secrets.DB_NAME }} user=${{ secrets.DB_USER_NAME }} password=${{ secrets.DB_PASSWORD }}"
-<<<<<<< HEAD
-=======
-        continue-on-error: true
->>>>>>> 25f7aa0... Cleanup
