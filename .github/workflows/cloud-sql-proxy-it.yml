@@ -23,5 +23,10 @@ jobs:
           PORT: 5432
     steps:
       - uses: actions/checkout@v2
+      - name: Proxy logs
+        run: docker logs "${{ job.services.cloud-sql-proxy.id }}"
       - name: Test connection
         run: psql "host=127.0.0.1 port=5432 sslmode=disable dbname=${{ secrets.DB_NAME }} user=${{ secrets.DB_USER_NAME }} password=${{ secrets.DB_PASSWORD }}"
+        continue-on-error: true
+      - name: Proxy logs
+        run: docker logs "${{ job.services.cloud-sql-proxy.id }}"
