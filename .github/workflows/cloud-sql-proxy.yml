@@ -1,0 +1,32 @@
+name: cloud-sql-proxy Unit
+on:
+  push:
+    paths:
+      - "cloud-sql-proxy/**"
+      - ".github/workflows/cloud-sql-proxy*"
+  pull_request:
+    paths:
+      - "cloud-sql-proxy/**"
+      - ".github/workflows/cloud-sql-proxy*"
+
+jobs:
+  run:
+    name: cloud-sql-proxy
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@master
+        with:
+          node-version: 12.x
+
+      - name: npm install
+        run: npm install
+        working-directory: ./cloud-sql-proxy
+
+      - name: npm lint
+        run: npm run lint
+        working-directory: ./cloud-sql-proxy

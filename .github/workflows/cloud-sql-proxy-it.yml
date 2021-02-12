@@ -1,0 +1,51 @@
+name: cloud-sql-proxy Integration
+
+on:
+  push:
+    paths:
+      - "cloud-sql-proxy/**"
+      - ".github/workflows/cloud-sql-proxy*"
+
+jobs:
+  gcloud:
+    name: Authenticate with setup-gcloud.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./setup-gcloud
+        with:
+          export_default_credentials: true
+          service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY_B64 }}
+      - name: setup Cloud SQL proxy
+        uses: ./cloud-sql-proxy
+        with:
+          instance_connection_name: ${{ secrets.INSTANCE_CONNECTION_NAME }}
+          port: ${{ secrets.CLOUD_SQL_PROXY_PORT }}
+        run: psql "host=127.0.0.1 port=${{ secrets.CLOUD_SQL_PROXY_PORT }} sslmode=disable dbname=${{ secrets.DB_NAME }} user=${{ secrets.DB_USER_NAME }} password=${{ secrets.DB_PASSWORD }}"
+
+  b64_json:
+    name: Authenticate with Base64 JSON credentials.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: setup Cloud SQL proxy
+        uses: ./cloud-sql-proxy
+        with:
+          credentials: ${{ secrets.SERVICE_ACCOUNT_KEY_B64 }}
+          instance_connection_name: ${{ secrets.INSTANCE_CONNECTION_NAME }}
+          port: ${{ secrets.CLOUD_SQL_PROXY_PORT }}
+        run: psql "host=127.0.0.1 port=${{ secrets.CLOUD_SQL_PROXY_PORT }} sslmode=disable dbname=${{ secrets.DB_NAME }} user=${{ secrets.DB_USER_NAME }} password=${{ secrets.DB_PASSWORD }}"
+
+  json:
+    name: Authenticate with JSON credentials.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: setup Cloud SQL proxy
+        uses: ./cloud-sql-proxy
+        with:
+          credentials: ${{ secrets.SERVICE_ACCOUNT_KEY_JSON }}
+          instance_connection_name: ${{ secrets.INSTANCE_CONNECTION_NAME }}
+          port: ${{ secrets.CLOUD_SQL_PROXY_PORT }}
+        run: psql "host=127.0.0.1 port=${{ secrets.CLOUD_SQL_PROXY_PORT }} sslmode=disable dbname=${{ secrets.DB_NAME }} user=${{ secrets.DB_USER_NAME }} password=${{ secrets.DB_PASSWORD }}"
+
